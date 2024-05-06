@@ -1,0 +1,9 @@
+bcrypt
+python-decouple==3.8
+fastapi
+mysql-connector==2.2.9
+pydantic
+SQLAlchemy
+uvicorn
+alembic
+PyJWT
