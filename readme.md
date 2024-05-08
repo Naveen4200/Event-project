@@ -4,10 +4,6 @@ Prerequisites
 
 Python version >= 3.10
 
-Clone the repository:
-
-git clone https://github.com/Naveen4200/User_fast_api.git
-
 Create a new environment.
 
 Install dependencies:
