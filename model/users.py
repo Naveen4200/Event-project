@@ -100,9 +100,9 @@ class Users(Base):
                 return {'status': False, 'data': None, 'message': 'Invalid mobile number'}
 
             if not user:
-                return {'status': False, 'data': None, 'message': 'User not found'}
+                return {'status': False, 'data': None, 'message': 'User not registered'}
 
-            return {'status': True, 'data': 'user found', 'message': None}
+            return {'status': True, 'data': None, 'message': 'user is already registered'}
 
         except Exception as e:
             # You might want to log the error instead of returning it directly
