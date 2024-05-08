@@ -7,3 +7,4 @@ SQLAlchemy
 uvicorn
 alembic
 PyJWT
+uvicorn
