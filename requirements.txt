@@ -8,4 +8,3 @@ uvicorn
 alembic
 PyJWT
 uvicorn
-mysqlclient
