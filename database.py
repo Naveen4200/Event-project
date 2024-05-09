@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Corrected connection string from easy panel
-SQLALCHEMY_DB_URL = "mysql://mysql:socializ_db@socializ_1_socializ_python/socializ_1"
+SQLALCHEMY_DB_URL = "mysql+mysqlconnector://sql6704492:9gz8hYclY6@sql6.freemysqlhosting.net:3306/sql6704492"
 
 # Create the engine
 engine = create_engine(SQLALCHEMY_DB_URL)
