@@ -1,27 +1,27 @@
-from datetime import datetime, timedelta
-from typing import Optional
+from datetime import datetime
 from fastapi import HTTPException, Depends
 from pydantic import BaseModel
-from sqlalchemy import Column, String, Integer, Boolean, DateTime, TIMESTAMP, BIGINT, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, Integer, Boolean, DateTime, TIMESTAMP, ForeignKey
+from sqlalchemy.orm import relationship, Session
 from sqlalchemy.sql import func
 from database import Base, Sessionlocal
-from my_config import api_response, get_db
+from my_config import get_db
 
 
 class TaskCreate(BaseModel):
-    task_url: str
-    taskTitle: str
-    taskStatus: str
-    type: str
+    task_title: str
+    task_status: str
+    type_: str
+    uuid: str
     name: str
-    rewardType: str
+    reward_type: str
     reward: int
     description: str
     platform: str
-    uuid: str
-    lastCompletion: datetime
-    isCompleted: bool
+    last_completion: datetime
+    is_completed: bool
+    user_id: int
+    task_url: str
 
     class Config:
         from_attributes = True
@@ -30,45 +30,66 @@ class TaskCreate(BaseModel):
 class Task(Base):
     __tablename__ = "task"
     task_id = Column(Integer, primary_key=True, autoincrement=True)
-    taskTitle = Column(String(255))
-    taskStatus = Column(String(255))
-    type = Column(String(255))
+    task_title = Column(String(255))
+    task_status = Column(String(255))
+    type_ = Column(String(255))
+    uuid = Column(String(255), unique=True)
     name = Column(String(255))
-    rewardType = Column(String(255))
+    reward_type = Column(String(255))
     reward = Column(Integer)
     description = Column(String(255))
     platform = Column(String(255))
-    lastCompletion = Column(DateTime)
-    isCompleted = Column(Boolean)
-    uuid = Column(String(25), ForeignKey('users.uuid'))
+    last_completion = Column(DateTime)
+    is_completed = Column(Boolean)
+    user_id = Column(Integer, ForeignKey('users.user_id'))
     task_url = Column(String(255))
     is_deleted = Column(Boolean, server_default='0', nullable=False)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.current_timestamp())
     deleted_on = Column(DateTime)
 
-    taskCreator = relationship("Users", backref="task_creator",
-                               uselist=False, primaryjoin="Task.uuid==Users.uuid")
-
-    # #######################################################################################################################
+    task_creator = relationship("Users", backref="task_creator",
+                                uselist=False, primaryjoin="Task.user_id==Users.user_id")
 
     @staticmethod
-    def task_insert(data: dict, db: Sessionlocal):
+    def task_insert(data: dict, db: Session):
         try:
             task_ = Task(**data)
             task_.created_at = datetime.now()
             db.add(task_)
             db.commit()
+            db.refresh(task_)
+
+            response = {
+                'task_id': task_.task_id,
+                'task_title': task_.task_title,
+                'task_status': task_.task_status,
+                'type_': task_.type_,
+                'uuid': task_.uuid,
+                'name': task_.name,
+                'reward_type': task_.reward_type,
+                'reward': task_.reward,
+                'description': task_.description,
+                'platform': task_.platform,
+                'last_completion': task_.last_completion,
+                'is_completed': task_.is_completed,
+                'user_id': task_.user_id,
+                'task_url': task_.task_url,
+                'is_deleted': task_.is_deleted,
+                'created_at': task_.created_at,
+                'updated_at': task_.updated_at,
+                'deleted_on': task_.deleted_on,
+            }
             return {
                 'status': True,
-                'data': None,
-                'message': 'Task Created'
+                'data': response,
+                'message': 'Successful'
             }
         except Exception as e:
             db.rollback()
-            return HTTPException(status_code=500, detail=str(e))
+            raise HTTPException(status_code=500, detail=str(e))
 
-# #########################################################################################################
+    # #########################################################################################################
 
     @staticmethod
     def task_read(uuid: str = None, db: Sessionlocal = Depends(get_db)):

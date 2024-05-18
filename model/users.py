@@ -83,7 +83,11 @@ class Users(Base):
                 'updated_at': usr.updated_at
             }
 
-            return response_data
+            return {
+                'status': True,
+                'data': response_data,
+                'message': 'successful',
+            }
         except Exception as e:
             db.rollback()
             return HTTPException(status_code=500, detail=str(e))
@@ -166,7 +170,11 @@ class Users(Base):
                     'updated_at': user.updated_at
                 }
 
-                return response
+                return {
+                    'status': True,
+                    'data': response,
+                    'message': 'successful',
+                }
             else:
                 return HTTPException(status_code=401, detail='Invalid mobile number or password')
 
