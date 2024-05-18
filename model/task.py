@@ -9,17 +9,17 @@ from my_config import get_db
 
 
 class TaskCreate(BaseModel):
-    task_title: str
-    task_status: str
-    type_: str
+    taskTitle: str
+    taskStatus: str
+    type: str
     uuid: str
     name: str
-    reward_type: str
+    rewardType: str
     reward: int
     description: str
     platform: str
-    last_completion: datetime
-    is_completed: bool
+    lastCompletion: datetime
+    isCompleted: bool
     user_id: int
     task_url: str
 
@@ -30,17 +30,17 @@ class TaskCreate(BaseModel):
 class Task(Base):
     __tablename__ = "task"
     task_id = Column(Integer, primary_key=True, autoincrement=True)
-    task_title = Column(String(255))
-    task_status = Column(String(255))
-    type_ = Column(String(255))
+    taskTitle = Column(String(255))
+    taskStatus = Column(String(255))
+    type = Column(String(255))
     uuid = Column(String(255), unique=True)
     name = Column(String(255))
-    reward_type = Column(String(255))
+    rewardType = Column(String(255))
     reward = Column(Integer)
     description = Column(String(255))
     platform = Column(String(255))
-    last_completion = Column(DateTime)
-    is_completed = Column(Boolean)
+    lastCompletion = Column(DateTime)
+    isCompleted = Column(Boolean)
     user_id = Column(Integer, ForeignKey('users.user_id'))
     task_url = Column(String(255))
     is_deleted = Column(Boolean, server_default='0', nullable=False)
@@ -62,17 +62,17 @@ class Task(Base):
 
             response = {
                 'task_id': task_.task_id,
-                'task_title': task_.task_title,
-                'task_status': task_.task_status,
-                'type_': task_.type_,
+                'taskTitle': task_.taskTitle,
+                'taskStatus': task_.taskStatus,
+                'type_': task_.type,
                 'uuid': task_.uuid,
                 'name': task_.name,
-                'reward_type': task_.reward_type,
+                'rewardType': task_.rewardType,
                 'reward': task_.reward,
                 'description': task_.description,
                 'platform': task_.platform,
-                'last_completion': task_.last_completion,
-                'is_completed': task_.is_completed,
+                'lastCompletion': task_.lastCompletion,
+                'isCompleted': task_.isCompleted,
                 'user_id': task_.user_id,
                 'task_url': task_.task_url,
                 'is_deleted': task_.is_deleted,
